@@ -10,8 +10,9 @@
    :headers {:location "https://www.strava.com/oauth/authorize?client_id=3424&response_type=code&redirect_uri=localhost/token_request&scope=read&state=access&approval_prompt=auto" }})
 
 (defn strava-token-request [request]
-  
-  )
+  {:status 200
+   :headers {"Content-Type" "text/html; charset=utf-8"}
+   :body "<html><body>Token Request</body></html"})
 
 (defn connect-init [request]
   ;; TODO: if request contains a valid id in the session, go to connect-user
@@ -22,14 +23,21 @@
 
 (defn connect-user [request]
   {:status 200
-   :body (view-hello-word request)})
+   :headers {"Content-Type" "text/html; charset=utf-8"}
+   :body (view/hello-world)})
+
+(defn connect-test [request]
+  {:status 200
+   :headers {"Content-Type" "text/html; charset=utf-8"}
+   :body (view/summary-html-test)})
 
 (defroutes app-routes
-  (GET "/:id" request (connect-user request) )
+  (GET "/test" request (connect-test request))
+  (GET "/token_request" request (strava-token-request request))
+  (GET "/user/" request (connect-user request) )
   (GET "/" request (connect-init request) )
-  (GET "/token_request")
   (route/not-found "Not Found"))
 
 
-;; (def app
-;;   (wrap-defaults app-routes site-defaults))
+(def app
+  (wrap-defaults app-routes site-defaults))
