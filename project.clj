@@ -6,6 +6,11 @@
                  [compojure "1.2.0"]
                  [ring/ring-defaults "0.1.2"]
                  [enlive "1.1.5"]
+                 [clj-http-lite "0.2.0"]
+                 [org.clojure/data.json "0.2.5"]
+                 [clj-time "0.8.0"]
+                                     
+
                  ]
   :plugins [[lein-ring "0.8.13"]]
   :ring {:handler strava-summary.core.handler/app}

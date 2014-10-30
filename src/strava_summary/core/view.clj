@@ -2,6 +2,15 @@
   (:require [net.cgrand.enlive-html :as html])
   (:import [java.io StringReader]))
 
+;; connect-html: html page with STRAVA connect button
+;;
+(html/deftemplate connect-template "connect.html" [])
+
+(defn connect-html []
+  (apply str (connect-template)))
+;;
+;; summary-html: html page to display the summary statistics
+;;
 (defn stat-to-html [stats keys]
   (html/content (str (get-in stats keys))))
 
@@ -19,17 +28,30 @@
   [:div#y_sport_3] (stat-to-html stats [:yearly :sport_3])
   )
 
-(defn summary-html [stats]
-  (apply str (summary-template stats)))
+(defn summary-html
+  ([]
+     (summary-html {:weekly  {:sport_1 1 :sport_2 2 :sport_3 3}
+                    :monthly {:sport_1 10 :sport_2 20 :sport_3 30}
+                    :yearly  {:sport_1 100 :sport_2 200 :sport_3 300}
+                    }))
+  ([stats]
+     (apply str (summary-template stats))))
 
-(defn summary-html-test []
-  (summary-html {:weekly  {:sport_1 1 :sport_2 2 :sport_3 3}
-                 :monthly {:sport_1 10 :sport_2 20 :sport_3 30}
-                 :yearly  {:sport_1 100 :sport_2 200 :sport_3 300}
-                 }))
+(html/deftemplate activities-template (java.io.StringReader. "<html><body><h1>Activities</h1><div></div></body></html>") [content]
+  [:html :body :div] (html/content (str content)))
 
-(html/deftemplate hello-world-template (java.io.StringReader. "<html><body><h1></h1></body></html>") []
-  [:html :body :h1] (html/content "Hello"))
+(defn activities-html [activities]
+  (apply str (activities-template (str activities))))
 
-(defn hello-world []
-  (apply str (hello-world-template)))
+;;
+;; test pages
+;;
+(html/deftemplate hello-world-template (java.io.StringReader. "<html><body><h1></h1></body></html>") [name]
+  [:html :body :h1] (html/content (str name)))
+
+(defn hello-world-html
+  ([]
+     (hello-world-html "Stranger"))
+  ([name]
+     (apply str (hello-world-template name)))
+  )
