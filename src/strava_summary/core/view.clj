@@ -11,10 +11,20 @@
 ;;
 ;; summary-html: html page to display the summary statistics
 ;;
+(defn meter-to-km [m]
+  (/ (float m) 1000))
+
 (defn stat-to-html [stats keys]
-  (html/content (str (get-in stats keys))))
+  (->> (get-in stats keys)
+       (meter-to-km)
+       (format "%02.2f")
+       (html/content)))
 
 (html/deftemplate summary-template "summary.html" [stats]
+  [:div#sport_1] (html/content (:sport_1 stats))
+  [:div#sport_2] (html/content (:sport_2 stats))
+  [:div#sport_3] (html/content (:sport_3 stats))
+  
   [:div#w_sport_1] (stat-to-html stats [:weekly :sport_1])
   [:div#w_sport_2] (stat-to-html stats [:weekly :sport_2])
   [:div#w_sport_3] (stat-to-html stats [:weekly :sport_3])
